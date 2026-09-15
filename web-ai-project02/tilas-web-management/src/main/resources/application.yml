@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: tilas-web-management
+
+  # 数据库账号密码从仓库根目录的 .env 文件读取
+  # Spring Boot原生不认 .env 文件，[.properties] 告诉 Spring按 properties 格式解析这个文件
+  # 列出多个候选路径是为了兼容不同的工作目录，文件不存在会自动跳过
+  config:
+    import:
+      - optional:file:.env[.properties]
+      - optional:file:../.env[.properties]
+      - optional:file:../../.env[.properties]
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: "${DB_URL:jdbc:mysql://localhost:3307/tilas}"
+    username: "${DB_USERNAME:root}"
+    password: "${DB_PASSWORD:}"
+
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+    #开启驼峰命名射射
+    map-underscore-to-camel-case: true
