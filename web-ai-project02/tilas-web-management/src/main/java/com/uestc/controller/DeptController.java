@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/*
+* @RequestMapping("/depts")
+* 提取公共路径前缀，方法上就可以不写这部分了
+* */
 @RestController
 public class DeptController {
 
@@ -50,4 +54,37 @@ public class DeptController {
         deptService.deleteById(id);
         return Result.success();
     }
+
+    /*
+    * 新增部门
+    *
+    * @RequestBody：将前端传递的JSON字符串转换为指定对象
+    * （json键名必须和对象属性名一致）
+    * */
+    @PostMapping("/depts")
+    public Result add(@RequestBody Dept dept) {
+        deptService.add(dept);
+        return Result.success();
+    }
+
+    /*
+    * 查询回显
+    *
+    * @PathVariable：获取路径参数
+    * */
+    @GetMapping("/depts/{id}")
+    public Result getInfo(@PathVariable Integer id) {
+        Dept dept = deptService.getInfo(id);
+        return Result.success(dept);
+    }
+
+    /*
+    * 修改部门
+    * */
+    @PutMapping("/depts")
+    public Result update(@RequestBody Dept dept) {
+        deptService.update(dept);
+        return Result.success();
+    }
 }
+
