@@ -4,6 +4,9 @@ import com.uestc.pojo.Dept;
 import com.uestc.pojo.Result;
 import com.uestc.service.DeptService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,8 +16,12 @@ import java.util.List;
 * @RequestMapping("/depts")
 * 提取公共路径前缀，方法上就可以不写这部分了
 * */
+@Slf4j
 @RestController
 public class DeptController {
+
+    //使用@Slf4j注解，无需手动创建logger对象
+    //private final Logger logger = LoggerFactory.getLogger(DeptController.class);
 
     @Autowired
     private DeptService deptService;
@@ -22,6 +29,7 @@ public class DeptController {
     //@RequestMapping("/depts")  //处理所有请求方法
     @GetMapping("/depts")     //只处理GET请求
     public Result list() {
+        log.info("查询所有部门");
         List<Dept> deptList = deptService.findAll();
         return Result.success(deptList);
     }
@@ -51,6 +59,7 @@ public class DeptController {
     //前端传递的参数名称必须和方法参数名称一致
     @DeleteMapping("/depts")
     public Result delete(Integer id) {
+        log.info("删除部门，id: {}", id);
         deptService.deleteById(id);
         return Result.success();
     }
@@ -63,6 +72,7 @@ public class DeptController {
     * */
     @PostMapping("/depts")
     public Result add(@RequestBody Dept dept) {
+        log.info("新增部门: {}", dept);
         deptService.add(dept);
         return Result.success();
     }
@@ -74,6 +84,7 @@ public class DeptController {
     * */
     @GetMapping("/depts/{id}")
     public Result getInfo(@PathVariable Integer id) {
+        log.info("查询部门信息，id: {}", id);
         Dept dept = deptService.getInfo(id);
         return Result.success(dept);
     }
@@ -83,6 +94,7 @@ public class DeptController {
     * */
     @PutMapping("/depts")
     public Result update(@RequestBody Dept dept) {
+        log.info("修改部门: {}", dept);
         deptService.update(dept);
         return Result.success();
     }
