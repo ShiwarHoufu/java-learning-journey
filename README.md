@@ -13,7 +13,7 @@ java-learning-journey/
 ├── web-ai-project01/         # JavaWeb 入门阶段练习
 ├── web-ai-project02/         # 综合案例：Tlias智能学习辅助系统
 │   └── tilas-web-management/ # Spring Boot + MyBatis + MySQL
-└── notes/                    # 学习笔记
+└── notes/                    # 学习笔记（迁移至独立仓库）
 ```
 
 每个子目录都是相互独立的 Maven 工程，需要分别导入 IDEA 打开运行。
