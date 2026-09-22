@@ -4,7 +4,10 @@ import com.uestc.pojo.Dept;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
-
+/*
+* 加了@Mapper后，Spring 会把这个 Mapper 代理对象注册成 Bean，
+* 你就可以直接在 Service 里用`@Autowired private DeptMapper deptMapper;`注入使用。
+* */
 @Mapper
 public interface DeptMapper {
 

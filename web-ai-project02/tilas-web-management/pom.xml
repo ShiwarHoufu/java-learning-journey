@@ -40,6 +40,13 @@
             <version>4.0.1</version>
         </dependency>
 
+        <!-- PageHelper 分页插件，4.x 版本适配 Spring Boot 4 -->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>4.1.1</version>
+        </dependency>
+
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>

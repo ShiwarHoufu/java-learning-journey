@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vue3 基础指令：v-bind / v-model / v-on / v-for / v-if & v-show</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    body { font-family: "Microsoft YaHei", sans-serif; max-width: 900px; margin: 20px auto; }
+    section { border: 1px solid #ddd; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; }
+    h2 { color: #c0392b; font-size: 18px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 6px 10px; text-align: center; }
+    button { margin-right: 8px; }
+    .highlight { color: #c0392b; font-weight: bold; }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ============================================================
+    1. v-bind 指令
+    场景：动态为标签属性绑定值（插值表达式 {{ }} 不能在标签内使用）
+    语法：v-bind:属性="变量"  或  简写  :属性="变量"
+  ============================================================ -->
+  <section>
+    <h2>1. v-bind 指令</h2>
+    <!-- 完整写法：v-bind:title -->
+    <a v-bind:href="linkUrl" target="_blank">v-bind 完整写法（悬停看 title）</a><br />
+    <!-- 简写：:src -->
+    <img :src="imgUrl" :alt="imgAlt" width="120" title=":title 简写绑定" />
+    <p>动态绑定的 class：<span :class="activeClass">这段文字样式由变量控制</span></p>
+  </section>
+
+  <!-- ============================================================
+    2. v-model 指令
+    作用：在表单元素上使用，双向数据绑定，可方便地获取或设置表单项数据
+    语法：v-model="变量名"
+    注意：v-model 中绑定的变量，必须在 data 中定义
+  ============================================================ -->
+  <section>
+    <h2>2. v-model 双向绑定（员工搜索表单）</h2>
+    <!-- 定义数据模型 searchForm，采集员工搜索表单数据 -->
+    姓名：<input type="text" id="name" v-model="searchForm.name" />
+    性别：
+    <select v-model="searchForm.gender">
+      <option value="">请选择</option>
+      <option value="1">男</option>
+      <option value="2">女</option>
+    </select>
+    职位：
+    <select v-model="searchForm.job">
+      <option value="">请选择</option>
+      <option value="班主任">班主任</option>
+      <option value="讲师">讲师</option>
+      <option value="学工主管">学工主管</option>
+    </select>
+    <button @click="doSearch">查询</button>
+    <button @click="clearForm">清空</button>
+    <p>当前表单数据：{{ JSON.stringify(searchForm) }}</p>
+  </section>
+
+  <!-- ============================================================
+    3. v-on 指令
+    作用：为 html 标签绑定事件（添加事件监听）
+    语法：v-on:事件名="方法名"   简写：@事件名="..."
+    注意：methods 函数中的 this 指向 Vue 实例，
+          可以通过 this 获取到 data 中定义的数据
+  ============================================================ -->
+  <section>
+    <h2>3. v-on 事件绑定</h2>
+    <button type="button" v-on:click="handle">点我（完整写法）</button>
+    <button type="button" @click="handle">再点我（简写 @click）</button>
+    <button type="button" @click="count++">点击计数：{{ count }}</button>
+    <p>打开控制台可查看 handle 方法输出的日志</p>
+  </section>
+
+  <!-- ============================================================
+    4. v-for 指令
+    作用：列表渲染，遍历容器的元素或者对象的属性
+    语法：<tr v-for="(item, index) in items" :key="item.id"> {{item}} </tr>
+    参数说明：
+      - items 为遍历的数组（必须在 data 中定义）
+      - item  为遍历出来的元素
+      - index 为索引/下标，从 0 开始；可省略：v-for="item in items"
+    key：
+      - 作用：给元素添加唯一标识，便于 Vue 进行列表项的正确排序复用，提升渲染性能
+      - 推荐使用 id 作为 key（唯一），不推荐使用 index 作为 key（会变化，不对应）
+    注意：要想让哪个标签循环展示多次，就在哪个标签上使用 v-for 指令
+  ============================================================ -->
+  <section>
+    <h2>4. v-for 列表渲染</h2>
+    <button type="button" @click="addEmployee">新增一名员工</button>
+    <table>
+      <thead>
+        <tr><th>#</th><th>姓名</th><th>性别</th><th>职位</th></tr>
+      </thead>
+      <tbody>
+        <!-- (item, index) in items 形式，:key 绑定唯一 id -->
+        <tr v-for="(emp, index) in employees" :key="emp.id">
+          <td>{{ index }}</td>
+          <td>{{ emp.name }}</td>
+          <td>{{ emp.gender === 1 ? '男' : '女' }}</td>
+          <td>{{ emp.job }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ============================================================
+    5. v-if & v-show
+    作用：控制元素的显示与隐藏
+    v-if：
+      - 语法：v-if="表达式"，true 显示；false 隐藏
+      - 原理：基于条件判断，来控制创建或移除元素节点（条件渲染）
+      - 场景：要么显示、要么不显示，不频繁切换的场景
+      - 可配合 v-else-if / v-else 链式判断
+
+    v-show：
+      - 语法：v-show="表达式"，true 显示；false 隐藏
+      - 原理：基于 CSS 样式 display 来控制显示与隐藏
+      - 场景：频繁切换显示隐藏的场景
+  ============================================================ -->
+  <section>
+    <h2>5. v-if 与 v-show</h2>
+    性别值（1 男 / 2 女 / 其它 未知）：
+    <input type="number" v-model.number="gender" style="width:60px" />
+    <br />
+    <!-- v-if 链式判断：v-else-if 在 v-if 之后，v-else 在最后 -->
+    <span v-if="gender === 1">男生（v-if）</span>
+    <span v-else-if="gender === 2">女生（v-else-if）</span>
+    <span v-else>未知（v-else）</span>
+    <br />
+    <button type="button" @click="visible = !visible">切换 v-show 显示</button>
+    <!-- v-show：元素始终渲染，仅通过 display:none 隐藏，适合频繁切换 -->
+    <p v-show="visible">这段文字用 v-show 控制，切换时 DOM 节点不会被移除</p>
+  </section>
+
+</div>
+
+<script>
+  // Vue3 创建应用实例（选项式 API，与课件示例一致）
+  const app = Vue.createApp({
+    // data 必须是一个函数，返回需要响应式的数据对象
+    data() {
+      return {
+        // ---- v-bind 演示 ----
+        linkUrl: 'https://www.vuejs.org',
+        imgUrl: 'https://vuejs.org/assets/logo.1ea10f04.svg',
+        imgAlt: 'Vue Logo',
+        activeClass: 'highlight',
+
+        // ---- v-model 演示：定义数据模型，采集员工搜索表单数据 ----
+        searchForm: {
+          name: '',
+          gender: '',
+          job: ''
+        },
+
+        // ---- v-on 演示 ----
+        count: 0,
+
+        // ---- v-for 演示：遍历的数组必须在 data 中定义 ----
+        nextId: 4,
+        employees: [
+          { id: 1, name: '张三', gender: 1, job: '班主任' },
+          { id: 2, name: '李四', gender: 2, job: '讲师' },
+          { id: 3, name: '王五', gender: 1, job: '学工主管' }
+        ],
+
+        // ---- v-if / v-show 演示 ----
+        gender: 1,
+        visible: true
+      };
+    },
+    // methods：方法定义，this 指向 Vue 实例，可访问 data 中的数据
+    methods: {
+      handle() {
+        console.log('试试就试试');
+      },
+      doSearch() {
+        // 通过 this 获取 data 中定义的表单数据
+        console.log('查询条件：', this.searchForm);
+      },
+      clearForm() {
+        this.searchForm = { name: '', gender: '', job: '' };
+      },
+      addEmployee() {
+        this.employees.push({
+          id: this.nextId,
+          name: '员工' + this.nextId,
+          gender: this.nextId % 2,
+          job: '新职位'
+        });
+        this.nextId++;
+      }
+    }
+  });
+
+  // 挂载到页面容器
+  app.mount('#app');
+</script>
+</body>
+</html>
