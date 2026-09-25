@@ -79,4 +79,45 @@ public class EmpServiceImpl implements EmpService {
         }
 
     }
+
+    /*
+    * 批量删除员工
+    * */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(List<Integer> ids) {
+        empMapper.deleteByIds(ids);
+
+        empExprMapper.deleteByEmpIds(ids);
+    }
+
+    /*
+    * 查询回显员工信息及工作经历
+    * */
+    @Override
+    public Emp getInfo(Integer id) {
+        return empMapper.getById(id);
+    }
+
+    /*
+    * 更新员工信息及工作经历
+    * */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void update(Emp emp) {
+        //1. 修改员工基本信息
+        emp.setUpdateTime(LocalDateTime.now());
+        empMapper.update(emp);
+
+        //2. 删除原有的工作经历
+        empExprMapper.deleteByEmpIds(List.of(emp.getId()));
+        //3. 保存本次提交的工作经历
+        List<EmpExpr> exprList = emp.getExprList();
+        if(!CollectionUtils.isEmpty(exprList)){
+            for (EmpExpr expr : exprList) {
+                expr.setEmpId(emp.getId());
+            }
+            empExprMapper.insertBatch(exprList);
+        }
+    }
 }

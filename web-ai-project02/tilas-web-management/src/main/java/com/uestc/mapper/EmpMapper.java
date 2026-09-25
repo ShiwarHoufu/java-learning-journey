@@ -36,4 +36,13 @@ public interface EmpMapper {
     @Insert("insert into emp (username, name, gender, phone, job, salary, image, entry_date, dept_id, create_time, update_time) " +
             "values (#{username}, #{name}, #{gender}, #{phone}, #{job}, #{salary}, #{image}, #{entryDate}, #{deptId}, #{createTime}, #{updateTime})")
     void insert(Emp emp); //因为这里传的是Emp对象，注意上方 '#{}' 内要和Emp类的属性名一致，所以用驼峰命名
+
+    //根据id批量删除员工
+    void deleteByIds(@Param("ids") List<Integer> ids);
+
+    //根据id查询员工基本信息及工作信息
+    Emp getById(Integer id);
+
+    //根据id修改员工基本信息（动态sql，见EmpMapper.xml）
+    void update(Emp emp);
 }
