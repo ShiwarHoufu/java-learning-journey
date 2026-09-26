@@ -82,4 +82,41 @@
         where id = #{id}
     </update>
 
+    <!--
+        统计各职位人数：emp.job 存的是 1~5 的整数，库里没有职位字典表，
+        所以用 case 直接翻译成职位名，else 兜底成"其他"（job 为 null 或不在 1~5 的值）。
+        注意两点：
+        1. 别名起成 job_name，不能叫 job，否则和 emp.job 真实列名撞车；
+        2. 要按 case 表达式分组（group by job_name），不能 group by job，
+           否则 job=null、job=6 各成一组，会出现多个都叫"其他"的行。
+    -->
+    <select id="countByJob" resultType="com.uestc.pojo.JobCount">
+        select case job
+                   when 1 then '班主任'
+                   when 2 then '讲师'
+                   when 3 then '学工主管'
+                   when 4 then '教研主管'
+                   when 5 then '咨询师'
+                   else '其他'
+               end      as job_name,
+               count(*) as num
+        from emp
+        group by job_name
+        order by num
+    </select>
+
+    <!--
+        统计男女人数：gender 是 tinyint unsigned not null，1 男 2 女，
+    -->
+    <select id="countByGender" resultType="java.util.Map">
+        select case gender
+                   when 1 then '男性员工'
+                   when 2 then '女性员工'
+               end      as name,
+               count(*) as value
+        from emp
+        group by gender
+        order by gender
+    </select>
+
 </mapper>

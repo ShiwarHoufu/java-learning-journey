@@ -2,11 +2,13 @@ package com.uestc.mapper;
 
 import com.uestc.pojo.Emp;
 import com.uestc.pojo.EmpQueryParam;
+import com.uestc.pojo.JobCount;
 import org.apache.ibatis.annotations.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface EmpMapper {
@@ -45,4 +47,10 @@ public interface EmpMapper {
 
     //根据id修改员工基本信息（动态sql，见EmpMapper.xml）
     void update(Emp emp);
+
+    //统计各个职位的员工人数，一行一个职位（见EmpMapper.xml）
+    List<JobCount> countByJob();
+
+    //统计男女人数
+    List<Map<String, Object>> countByGender();
 }
